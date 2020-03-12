@@ -11,7 +11,7 @@ public class OctoNotFull extends MovingEntity {
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> notFullTarget = world.findNearest(getPosition(),
-                new Fish(null, null, 0, null));
+                EntityFactory.makePlayer(null, null, 0, 0, null));
 
         if (!notFullTarget.isPresent() ||
                 !moveTo(world, notFullTarget.get(), scheduler) ||
@@ -25,7 +25,7 @@ public class OctoNotFull extends MovingEntity {
     {
         if (getResourceCount() >= getResourceLimit())
         {
-            AnimatedEntity octo = new OctoFull(getId(), getResourceLimit(),
+            AnimatedEntity octo = EntityFactory.makeOctoFull(getId(), getResourceLimit(),
                     getPosition(), getActionPeriod(), getAnimationPeriod(),
                     getImages());
 

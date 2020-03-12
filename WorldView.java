@@ -15,6 +15,7 @@ final class WorldView
    private int tileWidth;
    private int tileHeight;
    private Viewport viewport;
+   private Player main;
 
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
       int tileWidth, int tileHeight, Player main)
@@ -23,6 +24,7 @@ final class WorldView
       this.world = world;
       this.tileWidth = tileWidth;
       this.tileHeight = tileHeight;
+      this.main = main;
       this.viewport = new Viewport(numRows, numCols, main);
    }
 
@@ -67,10 +69,12 @@ final class WorldView
 
          if (viewport.contains(pos))
          {
+
             Point viewPoint = viewport.worldToViewport(pos.getX(), pos.getY());
             screen.image(getCurrentImage(entity),
                     viewPoint.getX() * tileWidth, viewPoint.getY() * tileHeight,
-                    (float)(getCurrentImage(entity).get().width*1.5), (float)(getCurrentImage(entity).get().height*1.5));
+                    (float) (getCurrentImage(entity).get().width * 1.5), (float) (getCurrentImage(entity).get().height * 1.5));
+
          }
       }
    }
@@ -79,6 +83,9 @@ final class WorldView
    {
       drawBackground();
       drawEntities();
+      drawHUD();
+      if(!world.getEntities().contains(main))
+         drawGameEnd();
    }
 
    public static PImage getCurrentImage(Object entity)
@@ -100,7 +107,45 @@ final class WorldView
       }
    }
 
+   private void drawHUD()
+   {
+      screen.image(checkHealth(), (float)(tileWidth*(viewport.getNumCols() - 2.5)), tileHeight/3,
+              (float)(checkHealth().width*1.5), (float)(checkHealth().height*1.5));
+   }
+
+   private PImage checkHealth()
+   {
+      if(main.getHealth() > 75)
+         return animateHealth();
+      else if(main.getHealth() <= 75 && main.getHealth() > 50)
+         return screen.loadImage("images/threeFourthHealth.bmp");
+      else if(main.getHealth() <= 50 && main.getHealth() > 25)
+         return screen.loadImage("images/halfHealth.bmp");
+      else if(main.getHealth() <= 25 && main.getHealth() > 0)
+         return screen.loadImage("images/oneFourthHealth.bmp");
+      else {
+         return screen.loadImage("images/noHealth.bmp");
+      }
+   }
+
+   private PImage animateHealth()
+   {
+      int select = screen.frameCount % 4;
+      PImage[] animation = {screen.loadImage("images/fullHealth1.bmp"),
+              screen.loadImage("images/fullHealth2.bmp"),
+              screen.loadImage("images/fullHealth3.bmp"),
+              screen.loadImage("images/fullHealth4.bmp")};
+      return animation[select];
+   }
+
    public Viewport getViewport() {
       return viewport;
+   }
+
+   public void drawGameEnd() {
+      screen.image(screen.loadImage("images/wyvern1.bmp"),
+              (float)(viewport.getNumCols() / 2 * tileWidth),
+              (float)(viewport.getNumRows() / 2 * tileHeight));
+
    }
 }

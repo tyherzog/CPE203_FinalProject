@@ -6,8 +6,8 @@ public class ParseObstacle extends Parse {
     private static final int OBSTACLE_ROW = 3;
 
     public static boolean parse(String[] properties, WorldModel world, ImageStore imageStore) {
-        return Parse.Parse(properties, world, imageStore, OBSTACLE_NUM_PROPERTIES, new Obstacle(properties[OBSTACLE_ID],
+        return Parse.Parse(properties, world, imageStore, OBSTACLE_NUM_PROPERTIES, EntityFactory.makeObstacle(properties[OBSTACLE_ID],
                 new Point(Integer.parseInt(properties[OBSTACLE_COL]), Integer.parseInt(properties[OBSTACLE_ROW])),
-                imageStore.getImageList(OBSTACLE_KEY)));
+                imageStore.getImageList(properties[OBSTACLE_ID])));
     }
 }

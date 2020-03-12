@@ -5,12 +5,14 @@ import java.util.Random;
 
 public abstract class ActiveEntity extends Entity{
     public static final Random rand = new Random();
+    private double health;
     private int actionPeriod;
 
     public ActiveEntity(String id, Point position, List<PImage> images, int imageIndex,
                         int resourceLimit, int resourceCount, int actionPeriod) {
         super(id, position, images, imageIndex, resourceLimit, resourceCount);
         this.actionPeriod = actionPeriod;
+        this.health = 100;
     }
 
     public int getActionPeriod() {
@@ -24,5 +26,14 @@ public abstract class ActiveEntity extends Entity{
         if(this instanceof AnimatedEntity)
             scheduler.scheduleEvent(this, new Animation((AnimatedEntity) this, 0),
                     ((AnimatedEntity)this).getAnimationPeriod());
+    }
+
+
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
     }
 }

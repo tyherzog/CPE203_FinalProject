@@ -20,7 +20,13 @@ final class Point implements Comparable<Point>
       this.prev = null;
    }
 
-   public String toString()
+    public boolean adjacent(Point p2)
+    {
+       return (getX() == p2.getX() && Math.abs(getY() - p2.getY()) == 1) ||
+               (getY() == p2.getY() && Math.abs(getX() - p2.getX()) == 1);
+    }
+
+    public String toString()
    {
       return "(" + x + "," + y + ")";
       //+ "G: " + g + " H: " + h
@@ -39,12 +45,6 @@ final class Point implements Comparable<Point>
       result = result * 31 + x;
       result = result * 31 + y;
       return result;
-   }
-
-   public boolean adjacent(Point p)
-   {
-      return (x == p.x && Math.abs(y - p.y) == 1) ||
-              (y == p.y && Math.abs(x - p.x) == 1);
    }
 
    public void calculateG(Point prev, Point end) {

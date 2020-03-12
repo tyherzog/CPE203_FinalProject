@@ -1,17 +1,20 @@
 import processing.core.PImage;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class MovingEntity extends AnimatedEntity {
 
     private PathingStrategy strategy = new AStarPathingStrategy();
+    private Point nextPosition;
+    private double damage;
+
 
     public MovingEntity(String id, Point position, List<PImage> images, int imageIndex, int resourceLimit,
                         int resourceCount, int actionPeriod, int animationPeriod) {
         super(id, position, images, imageIndex, resourceLimit, resourceCount, actionPeriod, animationPeriod);
+        this.nextPosition = position;
+        this.damage = 21;
     }
 
     public Point nextPosition(WorldModel world, Entity target) {
@@ -21,23 +24,21 @@ public abstract class MovingEntity extends AnimatedEntity {
                 PathingStrategy.DIAGONAL_CARDINAL_NEIGHBORS);
 
         if(potentialPos.size() != 0)
-            return potentialPos.get(0);
+            nextPosition = potentialPos.get(0);
         else
-            return getPosition();
+            nextPosition = getPosition();
+        return nextPosition;
     }
 
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)
     {
-        if (EventScheduler.adjacent(getPosition(), target.getPosition()))
+        if (getPosition().adjacent(target.getPosition()))
         {
             if(this instanceof OctoNotFull) {
-                setResourceCount(getResourceCount() + 1);
-                world.removeEntity(target);
-                scheduler.unscheduleAllEvents(target);
+                attack(world, target.getPosition(), scheduler);
             }
-            else if(this instanceof Crab) {
-                world.removeEntity(target);
-                scheduler.unscheduleAllEvents(target);
+            else if(this instanceof Goblin) {
+                attack(world, target.getPosition(), scheduler);
             }
 
             return true;
@@ -62,10 +63,11 @@ public abstract class MovingEntity extends AnimatedEntity {
 
     public boolean moveTo(WorldModel world, Point next, EventScheduler scheduler)
     {
-        if(world.withinBounds(next)) {
-            Optional<Entity> occupant = world.getOccupant(next);
-            if (!getPosition().equals(next) && !occupant.isPresent()) {
-                world.moveEntity(this, next);
+        nextPosition = next;
+        if(world.withinBounds(nextPosition)) {
+            Optional<Entity> occupant = world.getOccupant(nextPosition);
+            if (!getPosition().equals(nextPosition) && !occupant.isPresent()) {
+                world.moveEntity(this, nextPosition);
                 return true;
             }
         }
@@ -74,15 +76,15 @@ public abstract class MovingEntity extends AnimatedEntity {
 
     public boolean attack(WorldModel world, Point attackPoint, EventScheduler scheduler)
     {
+        System.out.println(attackPoint);
         Point newAttackPoint = new Point((getPosition().getX() + (int)Math.signum(attackPoint.getX() - getPosition().getX())),
                 (getPosition().getY() + (int)Math.signum(attackPoint.getY() - getPosition().getY())));
         if(world.withinBounds(newAttackPoint)) {
             Optional<Entity> occupant = world.getOccupant(newAttackPoint);
-            if (occupant.isPresent() && occupant.get().canInteract()) {
-                System.out.println("Enemy health before hit: " + occupant.get().getHealth());
-                occupant.get().setHealth(occupant.get().getHealth() - getDamage());
-                System.out.println("Enemy health after hit: " + occupant.get().getHealth());
-                if(occupant.get().getHealth() <= 0) {
+            if (occupant.isPresent() && occupant.get() instanceof ActiveEntity) {
+                ActiveEntity activeEntity = (ActiveEntity) occupant.get();
+                activeEntity.setHealth(activeEntity.getHealth() - getDamage());
+                if(activeEntity.getHealth() <= 0) {
                     world.removeEntity(occupant.get());
                     scheduler.unscheduleAllEvents(occupant.get());
                 }
@@ -93,9 +95,16 @@ public abstract class MovingEntity extends AnimatedEntity {
         return false;
     }
 
-//    public boolean withinRange(int range, Entity target)
-//    {
-//        if(getPosition().)
-//    }
+    public Point getNextPosition() {
+        return nextPosition;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
 }
 

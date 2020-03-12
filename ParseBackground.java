@@ -6,7 +6,7 @@ public class ParseBackground extends Parse{
 
     public static boolean parse(String[] properties, WorldModel world, ImageStore imageStore) {
         return Parse.Parse(properties, world, imageStore, BGND_NUM_PROPERTIES,
-                        new Background(properties[BGND_ID], new Point(Integer.parseInt(properties[BGND_COL]),
+                EntityFactory.makeBackground(properties[BGND_ID], new Point(Integer.parseInt(properties[BGND_COL]),
                         Integer.parseInt(properties[BGND_ROW])), imageStore.getImageList(properties[BGND_ID])));
     }
 }

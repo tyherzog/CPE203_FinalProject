@@ -29,8 +29,8 @@ public class Player extends MovingEntity{
 
     public void acceptableFrameShift(int x, int y, WorldModel world, WorldView view)
     {
-        int borderValueX = 7;
-        int borderValueY = 5;
+        int borderValueX = 5;
+        int borderValueY = 3;
         if((Math.abs(getPosition().getX() - view.getViewport().getCol()) <= borderValueX &&
                 !(Math.abs(getPosition().getX()) <= borderValueX)) || (Math.abs(getPosition().getX() -
                 (view.getViewport().getCol() + view.getViewport().getNumCols())) <= borderValueX &&

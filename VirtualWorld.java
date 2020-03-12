@@ -19,22 +19,27 @@ public final class VirtualWorld
 {
    private static final int TIMER_ACTION_PERIOD = 100;
 
-   public static int VIEW_WIDTH = 1296;
-   public static int VIEW_HEIGHT = 960;
    public static final int TILE_WIDTH = 48;
    public static final int TILE_HEIGHT = 48;
    private static final int WORLD_WIDTH_SCALE = 2;
    private static final int WORLD_HEIGHT_SCALE = 2;
-   private static final int VIEW_COLS = VIEW_WIDTH / TILE_WIDTH;
-   private static final int VIEW_ROWS = VIEW_HEIGHT / TILE_HEIGHT;
-   private static final int WORLD_COLS = VIEW_COLS * WORLD_WIDTH_SCALE;
-   private static final int WORLD_ROWS = VIEW_ROWS * WORLD_HEIGHT_SCALE;
+   private static final int VIEW_COLS = 15;
+           //= VIEW_WIDTH / TILE_WIDTH;
+   private static final int VIEW_ROWS = 11;
+                   //= VIEW_HEIGHT / TILE_HEIGHT;
+   private static final int WORLD_COLS = 40;
+                           //VIEW_COLS * WORLD_WIDTH_SCALE;
+   private static final int WORLD_ROWS = 30;
+                                   //VIEW_ROWS * WORLD_HEIGHT_SCALE;
+
+   public static int VIEW_WIDTH = TILE_WIDTH * VIEW_COLS;
+   public static int VIEW_HEIGHT = TILE_HEIGHT * VIEW_ROWS;
 
    private static final String IMAGE_LIST_FILE_NAME = "imagelist";
    private static final String DEFAULT_IMAGE_NAME = "background_default";
    private static final int DEFAULT_IMAGE_COLOR = 0x0;
 
-   private static final String LOAD_FILE_NAME = "world.sav";
+   private static final String LOAD_FILE_NAME = "World1.sav";
 
    private static final String FAST_FLAG = "-fast";
    private static final String FASTER_FLAG = "-faster";
@@ -58,14 +63,10 @@ public final class VirtualWorld
    private static final int running = 1;
    private static final float incr_factor = 2;
 
-   private int tempHeight;
-   private int tempWidth;
-
-
    public void settings()
    {
-      //size(VIEW_WIDTH, VIEW_HEIGHT);
-      fullScreen();
+      size(VIEW_WIDTH, VIEW_HEIGHT);
+      //fullScreen();
    }
 
    /*
@@ -98,6 +99,7 @@ public final class VirtualWorld
       scheduleActions(world, scheduler, imageStore);
 
       next_time = System.currentTimeMillis() + TIMER_ACTION_PERIOD;
+
    }
 
    public void draw()
@@ -107,7 +109,8 @@ public final class VirtualWorld
       {
          this.scheduler.updateOnTime(time);
          next_time = time + TIMER_ACTION_PERIOD;
-         countSpeed();
+         if(!checkGameEnd())
+            characterMove();
       }
 
       view.drawViewport();
@@ -115,6 +118,7 @@ public final class VirtualWorld
 
    public void mousePressed() {
       Point pressed = mouseToPoint(mouseX, mouseY);
+      System.out.println(pressed);
       mainCharacter.attackEnemy(pressed, world, imageStore, scheduler, view);
    }
 
@@ -132,8 +136,6 @@ public final class VirtualWorld
          keyLeft = true;
       if (keyCode == VK_D)
          keyRight = true;
-      if (keyCode == SHIFT)
-         shift = true;
    }
 
    public void keyReleased() {
@@ -145,11 +147,16 @@ public final class VirtualWorld
          keyLeft = false;
       if (keyCode == VK_D)
          keyRight = false;
-      if (keyCode == SHIFT)
-         shift = false;
    }
 
-   void countSpeed(){
+   public boolean checkGameEnd() {
+      if(!world.getEntities().contains(mainCharacter)) {
+         return true;
+      }
+      return false;
+   }
+
+   public void characterMove(){
       int xSpeed = 0;
       int ySpeed = 0;
       if(keyLeft && shift) xSpeed = (int)(-1*incr_factor*running);
@@ -166,7 +173,7 @@ public final class VirtualWorld
 
    public static Background createDefaultBackground(ImageStore imageStore)
    {
-      return new Background(DEFAULT_IMAGE_NAME, new Point(0,0),
+      return EntityFactory.makeBackground(DEFAULT_IMAGE_NAME, new Point(0,0),
          imageStore.getImageList(DEFAULT_IMAGE_NAME));
    }
 

@@ -1,4 +1,3 @@
-import java.util.Random;
 import java.util.Scanner;
 
 /*
@@ -8,11 +7,8 @@ Functions - everything our virtual world is doing right now - is this a good des
 final class Functions
 {
    //constants
-   private static final String OCTO_KEY = "octo";
    private static final String OBSTACLE_KEY = "obstacle";
-   private static final String FISH_KEY = "fish";
-   private static final String ATLANTIS_KEY = "atlantis";
-   private static final String SGRASS_KEY = "seaGrass";
+   private static final String CRYSTAL_KEY = "crystal";
    private static final String BGND_KEY = "background";
    private static final String PLAYER_KEY = "player";
 
@@ -55,16 +51,10 @@ final class Functions
          {
          case BGND_KEY:
             return ParseBackground.parse(properties, world, imageStore);
-         case OCTO_KEY:
-            return ParseOcto.parse(properties, world, imageStore);
          case OBSTACLE_KEY:
             return ParseObstacle.parse(properties, world, imageStore);
-         case FISH_KEY:
-            return ParseFish.parse(properties, world, imageStore);
-         case ATLANTIS_KEY:
-            return ParseAtlantis.parse(properties, world, imageStore);
-         case SGRASS_KEY:
-            return ParseSgrass.parse(properties, world, imageStore);
+         case CRYSTAL_KEY:
+            return ParseCrystal.parse(properties, world, imageStore);
          case PLAYER_KEY:
             return ParsePlayer.parse(properties, world, imageStore);
          }
