@@ -19,11 +19,16 @@ public class Crystal extends ActiveEntity{
         System.out.println(openPt.isPresent());
         if (openPt.isPresent()) {
             System.out.println(openPt.get());
-            ActiveEntity goblin = EntityFactory.makeGoblin(getId() + CRAB_ID_SUFFIX,
+            ActiveEntity goblin = EntityFactory.makeGoblin("goblin" + CRAB_ID_SUFFIX,
                     openPt.get(), getActionPeriod() / CRAB_PERIOD_SCALE,
                     CRAB_ANIMATION_MIN +
                             rand.nextInt(CRAB_ANIMATION_MAX - CRAB_ANIMATION_MIN),
                     imageStore.getImageList(CRAB_KEY));
+//                    EntityFactory.makeGoblin("goblin" + CRAB_ID_SUFFIX,
+//                    openPt.get(), getActionPeriod() / CRAB_PERIOD_SCALE,
+//                    CRAB_ANIMATION_MIN +
+//                            rand.nextInt(CRAB_ANIMATION_MAX - CRAB_ANIMATION_MIN),
+//                    imageStore.getImageList(CRAB_KEY));
 
             world.addEntity(goblin);
             goblin.scheduleActions(world, imageStore, scheduler);

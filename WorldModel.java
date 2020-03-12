@@ -154,7 +154,7 @@ final class WorldModel
    }
 
    /**Method that sets the background objects at a specified position with a specified background object*/
-   private void setBackgroundCell(Point pos, Background background)
+   public void setBackgroundCell(Point pos, Background background)
    {
       this.background[pos.getY()][pos.getX()] = background;
    }

@@ -52,4 +52,6 @@ public class EntityFactory {
     public static Wall makeWall(String id, Point position, List<PImage> images) {
         return new Wall(id, position, images);
     }
+
+
 }

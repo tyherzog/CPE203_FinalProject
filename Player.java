@@ -49,4 +49,5 @@ public class Player extends MovingEntity{
                 view.getViewport().getRow()), scheduler))
             executeActivity(world, imageStore, scheduler);
     }
+
 }

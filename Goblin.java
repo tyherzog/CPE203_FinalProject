@@ -30,5 +30,16 @@ public class Goblin extends MovingEntity{
         scheduler.scheduleEvent(this, new Activity(this, world, imageStore),
                 nextPeriod);
     }
+
+    public void transformFreezed(WorldModel world,
+                                 EventScheduler scheduler, ImageStore imageStore)
+    {
+        Entity caught_crabbo = getPosition().createGoblinCaught("goblin_freezed", imageStore.getImageList("goblin_freezed "));
+        world.removeEntity(this);
+        scheduler.unscheduleAllEvents(this);
+
+        world.addEntity(caught_crabbo);
+    }
+
 }
 

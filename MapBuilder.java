@@ -327,7 +327,7 @@ public class MapBuilder extends PApplet
                      break;
                   case HOLE:
                      entityType = "obstacle";
-                     myWriter.write(entityType + " " + findImageName(GridValues.HOLE, gridDecoSel[row][col])
+                     myWriter.write(entityType + " " + findImageName(GridValues.HOLE, gridHoleSel[row][col])
                              + " " + col + " " + row + "\n");
                      break;
                   case PLAYER:
@@ -390,6 +390,9 @@ public class MapBuilder extends PApplet
                   imageName = "background9";
                break;
                case 9:
+                  imageName = "background10";
+               break;
+               case 10:
                   imageName = "stairs";
                break;
             }
@@ -504,6 +507,7 @@ public class MapBuilder extends PApplet
                case 8:
                   imageName = "bigHole9";
                break;
+
             }
             break;
          default:

@@ -1,4 +1,7 @@
+import processing.core.PImage;
+
 import java.util.Comparator;
+import java.util.List;
 
 final class Point implements Comparable<Point>
 {
@@ -95,4 +98,29 @@ final class Point implements Comparable<Point>
       return this.getF() - o.getF();
    }
 
+
+   public int distanceSquared( Point p2)
+   {
+      int deltaX = this.getX() - p2.getX();
+      int deltaY = this.getY() - p2.getY();
+
+      return deltaX * deltaX + deltaY * deltaY;
+   }
+
+   public Entity createAngelBall(List<PImage> images)
+   {
+      return new Goblin("angelBall", this,
+              Quake.QUAKE_ACTION_PERIOD, Quake.QUAKE_ANIMATION_PERIOD,images);
+   }
+
+   public Entity createGoblinCaught(String id,
+                                    List<PImage> images)
+   {
+      return new Goblin_Caught(id, this, images);
+   }
+   public Entity createGoblin(List<PImage> images)
+   {
+      return new Goblin("goblin", this,
+              Quake.QUAKE_ACTION_PERIOD, Quake.QUAKE_ANIMATION_PERIOD,images);
+   }
 }

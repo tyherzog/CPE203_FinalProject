@@ -68,3 +68,10 @@ player images/wyvern5.bmp 255 255 255 0
 player images/wyvern6.bmp 255 255 255 0
 player images/wyvern7.bmp 255 255 255 0
 player images/wyvern8.bmp 255 255 255 0
+
+goblin images/Goblin01.bmp 255 255 255 0
+goblin_freezed images/GobkinFreezed.bmp 255 255 255 0
+FreezeMagic images/FreezedSquare.bmp 255 255 255 0
+
+EvilBall images/EvilBall.bmp 255 255 255 0
+angleBall images/AngelBall.bmp 255 255 255 0

@@ -1,9 +1,12 @@
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import processing.core.*;
+
+import javax.swing.*;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -109,18 +112,24 @@ public final class VirtualWorld
       {
          this.scheduler.updateOnTime(time);
          next_time = time + TIMER_ACTION_PERIOD;
-         if(!checkGameEnd())
+         if(!checkGameEnd()) {
             characterMove();
-      }
+         }
+         }
 
       view.drawViewport();
    }
 
+
    public void mousePressed() {
-      Point pressed = mouseToPoint(mouseX, mouseY);
-      System.out.println(pressed);
-      mainCharacter.attackEnemy(pressed, world, imageStore, scheduler, view);
-   }
+
+            Point pressed = mouseToPoint(mouseX, mouseY);
+            System.out.println(pressed);
+            mainCharacter.attackEnemy(pressed, world, imageStore, scheduler, view);
+    }
+
+
+
 
    private Point mouseToPoint(int x, int y)
    {
@@ -136,6 +145,49 @@ public final class VirtualWorld
          keyLeft = true;
       if (keyCode == VK_D)
          keyRight = true;
+
+      if (keyCode == VK_SPACE) {
+
+         Point p = mainCharacter.getPosition();
+         p = view.getViewport().worldToViewport(p.getX(), p.getY());
+
+         if (!(world.isOccupied(p))) {
+            Entity ship = p.createAngelBall(imageStore.getImageList("angleBall"));
+
+            world.addEntity(ship);
+            ((ActiveEntity) ship).scheduleActions( world, imageStore,scheduler);
+         }
+
+
+         for (int i = p.getX() ; i <= p.getX() ; i++) {
+            for (int j = p.getY() ; j <= p.getY() ; j++) {
+               if (world.withinBounds(new Point(i, j))) {
+                  world.setBackgroundCell(new Point(i, j), new Background("FreezeMagic", p, imageStore.getImageList("FreezeMagic")));
+               }
+
+            }
+
+         }
+
+         int endLoop = 0;
+         try {
+            //This is to check if the crab is inside the square grid. Need to change new enemy entity
+            while (endLoop == 0 && (world.findNearest(p, Goblin.class).get() instanceof Goblin)) {
+               Goblin goblin = (Goblin) world.findNearest(p, Goblin.class).get();
+               if (goblin.getPosition().distanceSquared(p) > 8) {
+                  endLoop = 1;
+               } else {
+
+                  goblin.transformFreezed(world, scheduler, imageStore);
+               }
+            }
+         }
+         catch (Exception NoSuchElementException){
+            endLoop =1;
+         }
+
+
+      }
    }
 
    public void keyReleased() {
@@ -147,6 +199,8 @@ public final class VirtualWorld
          keyLeft = false;
       if (keyCode == VK_D)
          keyRight = false;
+
+
    }
 
    public boolean checkGameEnd() {
@@ -253,5 +307,6 @@ public final class VirtualWorld
    {
       parseCommandLine(args);
       PApplet.main(VirtualWorld.class);
+      Music.playMusic();
    }
 }
